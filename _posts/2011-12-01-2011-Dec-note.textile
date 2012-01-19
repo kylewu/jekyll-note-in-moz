@@ -1,0 +1,39 @@
+=========
+Decemeber
+=========
+
+.. toctree::
+   :maxdepth: 1
+
+*  `AntiSpam Middleware`_
+*  `Gunicorn`_
+
+AntiSpam Middleware
+----------------------
+
+Handle process_request in middleware. In antispam __init__.py, add ANTI_SPAM dict.
+
+The path which should be checked is the key, and a list of all contents is the value part.
+
+Gunicorn
+-------------
+Gunicorn 'Green Unicorn' is a Python WSGI HTTP Server for UNIX.
+
+ABtest_ is quite interesting.
+
+.. _ABtest: http://solovyov.net/en/2007/11/24/nginx-mod-wsgi-vs-fastcgi/
+
+Campus
+------------
+
+Two versions are made. (to Dec.26)
+
+FoxLetter
+------------
+
+Create letter, but mail sending is not completed. Further talk must be made.
+
+Bugs
+-------
+
+Amb apply page.

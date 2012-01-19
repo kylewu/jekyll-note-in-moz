@@ -1,0 +1,42 @@
+========
+November
+========
+
+.. toctree::
+   :maxdepth: 1
+
+*  `Redis and Celery`_
+*  `User related`_
+*  `Syspool`_
+*  `System query and management`_
+
+Redis and Celery
+-----------------
+
+In redis, there are two keys : celery and _kombu.binding.celery.
+
+celery is a list of tasks while _kombu.binding.celery is a set which only contains
+"celery\x06\x16\x06\x16celery".
+
+User related
+-----------------
+
+Improve user related pages, including 
+
+* registration page (email has been registered error)
+* index page (notify)
+
+
+Syspool
+----------
+
+New syspool supports more features:
+
+* Support query by different types, such as new user, addon, event
+* Dynamic refresh page
+* User can set refresh interval time
+
+System query and management
+-----------------------------
+
+Query by user, time, entry, addon, event ......

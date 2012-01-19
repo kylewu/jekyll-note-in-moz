@@ -1,0 +1,116 @@
+========
+October
+========
+
+.. toctree::
+   :maxdepth: 1
+
+*  `User matters`_
+*  `Message Queue`_
+*  `Mail sending`_
+*  `Mail template`_
+*  `i18n`_
+*  `others`_
+
+User matters
+-------------
+- Register
+- Get password
+- Reset and change password
+- Activate
+
+Message Queue
+--------------
+
+Introduction
+^^^^^^^^^^^^^
+In COOP, we use RabbitMQ_ (or Redis_), django-celery_( django version Celery_) and django-celery-email_.
+
+.. _RabbitMQ: http://www.rabbitmq.com/
+.. _Celery: http://celeryproject.org/
+.. _django-celery: http://pypi.python.org/pypi/django-celery
+.. _django-celery-email: http://pypi.python.org/pypi/django-celery-email
+.. _Redis: http://www.redis.io/
+
+This `Quick Start <http://mathematism.com/2010/02/16/message-queues-django-and-celery-quick-start/>`_ gives us a brief
+introduction of why we need message queue in our project and how to integrate RabbitMQ, Celery with Django.
+
+This `RabbitMQ introcution <http://erhuabushuo.is-programmer.com/posts/29790.html>`_ (Chinese) shows some basic
+conceptions in RabbitMQ.
+
+In our project COOP, the following jobs would better be put into a queue:
+
+* Email sending
+* Rank and reputation calculating
+* Spam detecting
+* Image processing
+
+How to run
+^^^^^^^^^^^^^^^^
+
+Start RabbitMQ server in background
+  *sudo rabbitmq-server -detached*
+
+Run celeyd server
+  *./manage.py celeryd -l info*
+  **or** *make ce* if you find a Makefile in coop root folder
+
+Considering I use Redis instead of RabbitMQ when testing, run Redis by typing
+  *redis-server*
+
+Tasks
+^^^^^^
+It is easy to add tasks using django-celery_.
+
+- Add tasks.py in app folder
+- Use task decorator to register a task::
+
+    @task(ignore_result=True)
+    def test_akismet_spam_filter(content_obj, user_agent = 'firefox', user_ip=''):
+        content_cls = ContentType.objects.get_for_model(content_obj)
+
+That's it. Quite straightforwad.
+
+Celery_ also supports run task at a certain time. We can use this feature to do statistic work.
+
+Task failure
+^^^^^^^^^^^^^
+The default behavior when a task fails is to restart this task after 3 minutes. And the maximum times of retrying which is
+3 by default, after that the task fails and closes. By providing *max_retries* and *default_retry_delay*, we can change
+default behaviore.
+
+TODO
+^^^^^^^^^^^^^
+* RabbitMQ user
+
+Mail sending
+-------------
+Sending mail as a task when user register or get back password. Besides, when one question gets reply, the asker will get email
+notification if he choose to receive notification.
+
+Now, mail functions are also realized in MQ. django-celery-email_ is used because it replaces django mail backend to its own
+backend. In this case, all mail sending calls by django mail functions will create a mail task. No more work to do, we
+have already got asynchronous mail tasks.
+
+Mail template
+-----------------
+Use jingo to render html file which contains mail body or subject.
+
+i18n
+------
+Figure out how Django make i18n work.
+
+**Jingo issui**
+
+_ is used in Python code to get translation. And jinja2 also supports i18n by enabling i18n extension.
+
+However, when using the following code in html, it does not find existing translation::
+
+    {{ trans 'Hello World' }}
+
+One solution for this problem is to provide ``gettext`` and ``ngettext`` parameters in Jingo, so Jingo knows how to
+tranlate these phrases.
+
+others
+---------
+Send IRC message when new question is posted in bigbang.
